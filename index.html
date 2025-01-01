@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <audio id="ding-audio" src="ding.mp3"></audio>
+    <audio id="nowant-audio" src="nowant.mp3"></audio>
+    <audio id="cheers-audio" src="cheers.mp3"></audio>
+
+  <div class="container">
+    <!-- Row 1: Title and Rules -->
+    <div class="row title-rules">
+      <div class="title">
+        <h1>MATH TRANSLATION<br>SPEED DRILL</h1>
+      </div>
+      <div class="rules">
+        <p>Choose the operation most often required<br>when these words appear in a word problem.</p>
+      </div>
+    </div>
+  
+    <!-- Row 3: Start Button and Timer -->
+    <div class="row control-timer">
+      <div class="timer">
+        <p><span id="timer">00:00.00</span></p>
+      </div>   
+      <div class="control">
+        <button id="start-btn">Start</button>
+      </div>
+    </div>
+
+    <!-- Row 4: Image with Questions -->
+    <div class="row image">
+      <img id="game-image" src="Track.png" alt="Game Image">
+      <!-- Text Field centered on the image -->
+      <div class="text-field">
+        <input type="text" id="centered-text" placeholder="">
+      </div>
+    </div>
+
+    <!-- Rows 6 & 7: Answer Buttons -->
+    <div class="row answers">
+      <button class="answer-btn">SUBTRACTION</button>
+      <button class="answer-btn">ADDITION</button>
+    </div>
+    <div class="row answers">
+      <button class="answer-btn">DIVISION</button>
+      <button class="answer-btn">MULTIPLICATION</button>
+    </div>
+  
+    <div class="empty">
+        <p><br></p>
+        <p><br></p>
+    </div>
+
+
+
+  <!-- Include racestart.mp3 audio file -->
+  <audio id="race-audio" src="racestart.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

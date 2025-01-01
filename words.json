@@ -1,0 +1,56 @@
+{
+    "Add": [
+        "ADDITION",
+        "ADD",
+        "AND",
+        "SUM",
+        "TOTAL",
+        "PLUS",
+        "MORE THAN",
+        "IN ADDITION TO",
+        "INCREASED BY",
+        "ENLARGED BY",
+        "EXCEEDS BY",
+        "GAIN",
+        "ROSE",
+        "GREATER THAN",
+        "COMBINE",
+        "TOGETHER"
+    ],
+    "Mult": [
+        "MULTIPLY",
+        "MULTIPLIED BY",
+        "TIMES",
+        "OF",
+        "BY",
+        "PRODUCT",
+        "AT",
+        "GROUPS OF"
+    ],
+    "Sub": [
+        "SUBTRACT",
+        "SUBTRACTION",
+        "MINUS",
+        "TAKE AWAY",
+        "DECREASED BY",
+        "LESS THAN",
+        "DIMINISHED BY",
+        "REDUCED BY",
+        "FEWER THAN",
+        "DIFFERENCE",
+        "DROPPED",
+        "LOSS OF"
+    ],
+    "Div": [
+        "DIVIDED BY",
+        "INTO",
+        "QUOTIENT",
+        "PER",
+        "RATIO",
+        "PARTS",
+        "DIVIDEND",
+        "DIVISOR",
+        "DISTRIBUTED AMONG",
+        "FRACTIONS"
+    ]
+}
