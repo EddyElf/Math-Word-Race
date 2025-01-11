@@ -235,8 +235,8 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px; /* Adjust text size as needed */
-  color: white; /* Ensure any text remains readable */
+  font-size: 22px; /* Adjust text size as needed */
+  color: #FFD700; /* Ensure any text remains readable */
 }
 
   
