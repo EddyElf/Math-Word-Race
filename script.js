@@ -132,19 +132,32 @@ document.addEventListener('DOMContentLoaded', () => {
             "SUBTRACTION": "Sub",
             "DIVISION": "Div"
         };
-
+    
         if (buttonCategoryMapping[normalizedAnswer] === correctCategory) {
             dingAudio.play(); // Play correct sound
             displayNextWord();
         } else {
             nowantAudio.play(); // Play incorrect sound
-
+    
+            // Display the incorrect image
+            textField.value = ""; // Clear the text field
+            textField.style.backgroundImage = 'url("incorrect.png")';
+            textField.style.backgroundRepeat = 'no-repeat';
+            textField.style.backgroundSize = 'contain';
+            textField.style.backgroundPosition = 'center';
+    
             // Insert the word at a random position in the list
             const randomIndex = Math.floor(Math.random() * (wordsList.length + 1));
             wordsList.splice(randomIndex, 0, currentWord);
-            displayNextWord();
+    
+            // Wait for 0.5 seconds before displaying the next word
+            setTimeout(() => {
+                textField.style.backgroundImage = ''; // Clear the image
+                displayNextWord();
+            }, 999);
         }
     }
+    
 
     // Format time for display
     function formatTime(ms) {
