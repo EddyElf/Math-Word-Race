@@ -219,6 +219,25 @@ body, html {
     font-weight: bold; /* Bold placeholder text */
 }
 
+#centered-text, .text-field {
+  position: absolute;
+  top: 50%; /* Vertical center */
+  left: 50%; /* Horizontal center */
+  transform: translate(-50%, -50%); /* Adjust position to be perfectly centered */
+  width: 100%; /* Ensure it covers the entire container */
+  height: 100%; /* Ensure it covers the entire container */
+  background-color: transparent; /* Make background transparent */
+  background-repeat: no-repeat;
+  background-size: cover; /* Ensure the image covers the entire area */
+  background-position: center; /* Center the image */
+  z-index: 10; /* Ensure it appears above other elements */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px; /* Adjust text size as needed */
+  color: white; /* Ensure any text remains readable */
+}
 
   
   
