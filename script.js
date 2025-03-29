@@ -123,40 +123,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Check the player's answer
-    function checkAnswer(selectedAnswer) {
-        const correctCategory = findGroup(currentWord);
-        const normalizedAnswer = selectedAnswer.trim().toUpperCase();
-        const buttonCategoryMapping = {
-            "ADDITION": "Add",
-            "MULTIPLICATION": "Mult",
-            "SUBTRACTION": "Sub",
-            "DIVISION": "Div"
-        };
-    
-        if (buttonCategoryMapping[normalizedAnswer] === correctCategory) {
-            dingAudio.play(); // Play correct sound
+    // Check the player's answer
+function checkAnswer(selectedAnswer) {
+    const correctCategory = findGroup(currentWord);
+    const normalizedAnswer = selectedAnswer.trim().toUpperCase();
+    const buttonCategoryMapping = {
+        "ADDITION": "Add",
+        "MULTIPLICATION": "Mult",
+        "SUBTRACTION": "Sub",
+        "DIVISION": "Div"
+    };
+
+    if (buttonCategoryMapping[normalizedAnswer] === correctCategory) {
+        dingAudio.play(); // Play correct sound
+        displayNextWord();
+    } else {
+        nowantAudio.play(); // Play incorrect sound
+        
+        // Disable answer buttons
+        answerButtons.forEach(button => button.disabled = true);
+
+        // Display the incorrect image
+        textField.value = ""; // Clear the text field
+        textField.style.backgroundImage = 'url("incorrect.png")';
+        textField.style.backgroundRepeat = 'no-repeat';
+        textField.style.backgroundSize = 'contain';
+        textField.style.backgroundPosition = 'center';
+
+        // Insert the word at a random position in the list
+        const randomIndex = Math.floor(Math.random() * (wordsList.length + 1));
+        wordsList.splice(randomIndex, 0, currentWord);
+
+        // Wait for 0.999 seconds before displaying the next word
+        setTimeout(() => {
+            textField.style.backgroundImage = ''; // Clear the image
+
+            // Re-enable answer buttons
+            answerButtons.forEach(button => button.disabled = false);
+
             displayNextWord();
-        } else {
-            nowantAudio.play(); // Play incorrect sound
-    
-            // Display the incorrect image
-            textField.value = ""; // Clear the text field
-            textField.style.backgroundImage = 'url("incorrect.png")';
-            textField.style.backgroundRepeat = 'no-repeat';
-            textField.style.backgroundSize = 'contain';
-            textField.style.backgroundPosition = 'center';
-    
-            // Insert the word at a random position in the list
-            const randomIndex = Math.floor(Math.random() * (wordsList.length + 1));
-            wordsList.splice(randomIndex, 0, currentWord);
-    
-            // Wait for 0.5 seconds before displaying the next word
-            setTimeout(() => {
-                textField.style.backgroundImage = ''; // Clear the image
-                displayNextWord();
-            }, 999);
-        }
+        }, 999);
     }
+}
+
     
 
     // Format time for display
