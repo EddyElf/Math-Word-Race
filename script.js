@@ -13,33 +13,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let wordsList = [];
     let currentWord = "";
     let gamePaused = false;
+    let wordDisplayPaused = false;
 
-    // Fetch JSON data
     fetch('words.json')
         .then(response => response.json())
         .then(data => {
             wordsData = data;
         });
 
-    // Start button event listener
     startBtn.addEventListener('click', () => {
         if (gamePaused || startBtn.textContent === "Restart") {
-            // Confirm restart only if game is active or game is paused
             const restartGame = confirm("Do you want to restart the game?");
             if (restartGame) {
                 resetGame();
                 startGame();
-                startBtn.textContent = "Restart"; // Change the button to "Restart"
+                startBtn.textContent = "Restart";
             }
         } else {
-            // Start the game if it's not paused or restarted yet
             resetGame();
             startGame();
-            startBtn.textContent = "Restart"; // Change the button to "Restart"
+            startBtn.textContent = "Restart";
         }
     });
 
-    // Add event listeners to answer buttons
     answerButtons.forEach(button => {
         button.addEventListener('click', () => {
             const selectedAnswer = button.textContent.trim();
@@ -47,48 +43,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Reset game state
     function resetGame() {
-        clearInterval(TimerInterval); // Stop the timer
+        clearInterval(TimerInterval);
         TimerElement.textContent = '00:00.00';
         wordsList = [];
         currentWord = "";
         textField.value = "";
-        gamePaused = false; // Reset gamePaused when game is reset
+        gamePaused = false;
+        wordDisplayPaused = false;
+        answerButtons.forEach(button => button.disabled = false); // Enable buttons on reset
     }
 
-    // Start the game
     function startGame() {
-        raceAudio.play(); // Play race start sound
+        raceAudio.play();
 
         setTimeout(() => {
             const startTime = performance.now();
 
             wordsList = shuffleWords(flattenWords(wordsData));
-            displayNextWord();
+            if (!wordDisplayPaused) {
+                displayNextWord();
+            }
 
             TimerInterval = setInterval(() => {
                 const elapsedTime = performance.now() - startTime;
                 TimerElement.textContent = formatTime(elapsedTime);
             }, 10);
-        }, 4000); // Delay for race start audio
+        }, 4000);
     }
 
-    // Resume the game (if paused)
-    function resumeGame() {
-        const startTime = performance.now();
-        TimerInterval = setInterval(() => {
-            const elapsedTime = performance.now() - startTime;
-            TimerElement.textContent = formatTime(elapsedTime);
-        }, 10);
-    }
-
-    // Flatten the wordsData object into a single array of words
     function flattenWords(wordsData) {
         return Object.values(wordsData).flat();
     }
 
-    // Shuffle an array using Fisher-Yates algorithm
     function shuffleWords(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -97,12 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // Display the next word from the list
     function displayNextWord() {
+        if (gamePaused || wordDisplayPaused) return; // Prevent word display while paused
+
         if (wordsList.length === 0) {
             cheersAudio.play();
             textField.value = "EXCELLENT WORK!";
             clearInterval(TimerInterval);
+            answerButtons.forEach(button => button.disabled = true); // Disable buttons when game ends
             return;
         }
 
@@ -112,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         textField.value = currentWord;
     }
 
-    // Find the group a word belongs to
     function findGroup(word) {
         for (const category in wordsData) {
             if (wordsData[category].includes(word)) {
@@ -122,53 +110,46 @@ document.addEventListener('DOMContentLoaded', () => {
         return "Unknown";
     }
 
-    // Check the player's answer
-    // Check the player's answer
-function checkAnswer(selectedAnswer) {
-    const correctCategory = findGroup(currentWord);
-    const normalizedAnswer = selectedAnswer.trim().toUpperCase();
-    const buttonCategoryMapping = {
-        "ADDITION": "Add",
-        "MULTIPLICATION": "Mult",
-        "SUBTRACTION": "Sub",
-        "DIVISION": "Div"
-    };
+    function checkAnswer(selectedAnswer) {
+        const correctCategory = findGroup(currentWord);
+        const normalizedAnswer = selectedAnswer.trim().toUpperCase();
+        const buttonCategoryMapping = {
+            "ADDITION": "Add",
+            "MULTIPLICATION": "Mult",
+            "SUBTRACTION": "Sub",
+            "DIVISION": "Div"
+        };
 
-    if (buttonCategoryMapping[normalizedAnswer] === correctCategory) {
-        dingAudio.play(); // Play correct sound
-        displayNextWord();
-    } else {
-        nowantAudio.play(); // Play incorrect sound
-        
-        // Disable answer buttons
-        answerButtons.forEach(button => button.disabled = true);
+        if (buttonCategoryMapping[normalizedAnswer] === correctCategory) {
+            dingAudio.play();
+            if (!wordDisplayPaused) {
+                displayNextWord();
+            }
+        } else {
+            nowantAudio.play();
+            gamePaused = true; // Pause game
+            wordDisplayPaused = true; // Pause word display
+            answerButtons.forEach(button => button.disabled = true);
 
-        // Display the incorrect image
-        textField.value = ""; // Clear the text field
-        textField.style.backgroundImage = 'url("incorrect.png")';
-        textField.style.backgroundRepeat = 'no-repeat';
-        textField.style.backgroundSize = 'contain';
-        textField.style.backgroundPosition = 'center';
+            textField.value = "";
+            textField.style.backgroundImage = 'url("incorrect.png")';
+            textField.style.backgroundRepeat = 'no-repeat';
+            textField.style.backgroundSize = 'contain';
+            textField.style.backgroundPosition = 'center';
 
-        // Insert the word at a random position in the list
-        const randomIndex = Math.floor(Math.random() * (wordsList.length + 1));
-        wordsList.splice(randomIndex, 0, currentWord);
+            const randomIndex = Math.floor(Math.random() * (wordsList.length + 1));
+            wordsList.splice(randomIndex, 0, currentWord);
 
-        // Wait for 0.999 seconds before displaying the next word
-        setTimeout(() => {
-            textField.style.backgroundImage = ''; // Clear the image
-
-            // Re-enable answer buttons
-            answerButtons.forEach(button => button.disabled = false);
-
-            displayNextWord();
-        }, 999);
+            setTimeout(() => {
+                textField.style.backgroundImage = '';
+                answerButtons.forEach(button => button.disabled = false);
+                gamePaused = false; // Resume game
+                wordDisplayPaused = false; // Resume word display
+                displayNextWord();
+            }, 999);
+        }
     }
-}
 
-    
-
-    // Format time for display
     function formatTime(ms) {
         const mins = Math.floor(ms / 60000).toString().padStart(2, '0');
         const secs = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
